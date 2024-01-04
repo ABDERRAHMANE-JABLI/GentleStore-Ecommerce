@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}GentleStore | Compare Product
+{% endblock %}
+
+{% block body %}
+{% include "Header/page_head.html.twig" with {'page_name':'Compare Products'} %}
+	<div class="section">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="compare_box">
+						<div class="table-responsive">
+							<table class="table table-bordered text-center">
+								<tbody id="compare">
+									<tr class="pr_image">
+										
+									</tr>
+									<tr class="pr_title">
+										
+									</tr>
+									<tr class="pr_price">
+										
+									</tr>
+									<tr class="pr_brand">
+										
+									</tr>
+									<tr class="pr_stock">
+										
+									</tr>
+									<tr class="pr_add_to_cart">
+										
+									</tr>
+									
+									<tr class="pr_remove">
+										
+									</tr>
+								</tbody><!--<tr class="pr_size">
+										<td class="row_title">Sizes Available</td>
+										<td class="row_size">
+											<span>S, M, L, XL</span>
+										</td>
+										<td class="row_size">
+											<span>S, M, L, XL</span>
+										</td>
+										<td class="row_size">
+											<span>S, M, L, XL</span>
+										</td>
+									</tr>-->
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+	<script>
+		window.onload = () => { 
+		displayCompare();
+		/*const links = document.querySelectorAll("#compare .action_remov");
+		links.forEach((link)=>{
+			link.addEventListener('click',async function(event){
+					event.preventDefault();
+					console.log('aaaaaaaaa');
+				const result = await fetchData(link.href);
+				if(result){
+					displayCompare();
+				}
+			})
+		})*/
+
+		
+	};
+	const remove = async (id)=>{
+		const result = await fetchData(`/compare/remove/${id}`);
+				if(result){
+					displayCompare();
+				}
+	}
+
+const displayCompare = async () => {
+	const tr_image = document.querySelector('#compare .pr_image');
+	const tr_name = document.querySelector('#compare .pr_title');
+	const tr_price = document.querySelector('#compare .pr_price');
+	const tr_brand = document.querySelector('#compare .pr_brand');
+	const tr_stock = document.querySelector('#compare .pr_stock');
+	const tr_btnRemove = document.querySelector('#compare .pr_remove');
+	const tr_btnAdd = document.querySelector('#compare .pr_add_to_cart');
+	const compare = await fetchData('/compare/getData');
+
+    if(compare.length > 0){
+		content_img = '<td class="row_title">Product Image</td>'
+		content_name = '<td class="row_title">Product Name</td>'
+		content_btn_add = '<td class="row_title"></td>'
+		content_price= '<td class="row_title">Product Price</td>'
+		content_stock = '<td class="row_title">Product Stock</td>'
+		content_remove = '<td class="row_title"></td>';
+		content_brand = '<td class="row_title">Product Brand</td>';
+        compare.forEach((product)=>{
+			content_img += `<td class="row_img"><img src="/assets/images/products/${product[1]}" alt="compare-img" width="150px" height="150px"></td>`;
+			content_name += `<td class="product_name">${product[2]}</td>`;
+			content_price += `<td class="product_price"><span class="price">${format_currency(product[3])}</span></td>`;
+			if(product[4] > 0) {content_stock += `<td class="row_stock"> <span class="in-stock">In Stock</span> </td>`;}
+			else{content_stock += `<td class="row_stock"> <span class="out-stock">Out Of Stock</span> </td>`;}
+			content_remove += `<td class="row_remove"><span class="remove_span" onClick="remove(${product[0]})">Remove</span>&nbsp;<i class="fa fa-times"></i></span></td>`
+			content_btn_add += `<td class="row_btn"><a href="/cart/add/${product[0]}/1" class="btn btn-fill-out"><i class="icon-basket-loaded"></i>Add To Cart</a></td>`
+			content_brand += `<td><strong>${product[5]}</strong></td>`;
+		});
+		tr_image.innerHTML = content_img; tr_name.innerHTML = content_name; tr_btnRemove.innerHTML = content_remove;
+		tr_price.innerHTML = content_price; tr_stock.innerHTML = content_stock; tr_btnAdd.innerHTML = content_btn_add;
+		tr_brand.innerHTML = content_brand;
+    }
+	else{
+		document.querySelector('#compare').innerHTML = "<tr><td colspan='4'>Add Some Product To this Compare List</td></tr>";
+	}
+	
+}
+	</script>
+
+{% endblock %}

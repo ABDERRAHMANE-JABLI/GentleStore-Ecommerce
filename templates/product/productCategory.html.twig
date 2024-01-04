@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{parent()}} | Products {% endblock %}
+
+{% block body %}
+        {% include "Header/page_head.html.twig" with {'page_name': 'Products / '~ category.name} %}
+    <div class="main_content">
+        <div class="section">
+            <div class="container">
+                <div class="row">
+                    {% for product in category.products %}
+                        <div class="col-lg-3 col-md-4 col-6">
+				            {% include "product/displayProduct.html.twig" %}
+			            </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+window.onload = ()=> {
+			const links = document.querySelectorAll('.action');
+			links.forEach((link)=>{
+				link.addEventListener('click',async function(e){
+					e.preventDefault();
+                    var href = link.href;
+					var classe = link.classList[1];
+					//request : 
+					const result = await fetchData(href);
+					if(result==0) {toastr.error('Already Exist'); return;}
+					if(classe == 'action_compare' && result){
+						toastr.info('Product Added To The Compare List');
+					}
+					if(classe=='action_cart' && result){
+						successMSG('Success','Product Added To Your Cart');
+						updateCartHeader(result);
+					}
+					if(classe=='action_like' && result){
+						infoMSG('Product Added To The WishList');
+					}
+				});
+			})
+	};//action_like action_compare action_cart
+
+</script>
+{% endblock %}

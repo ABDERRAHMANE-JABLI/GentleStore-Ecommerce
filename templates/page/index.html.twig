@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{parent()}}| {{page.title}} {% endblock %}
+
+{% block body %}
+    {% include "Header/page_head.html.twig" with {'page_name':page.title} %}
+
+    <div class="container mt-3 mb-3">
+    {{
+        page.content | raw
+    }}
+    </div>
+{% endblock %}

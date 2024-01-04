@@ -1,0 +1,7 @@
+main{
+    overflow-x: auto !important;
+}
+
+table.datagrid{
+    border-collapse: collapse;
+}

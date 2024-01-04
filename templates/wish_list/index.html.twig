@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}GentlSore | My WishList{% endblock %}
+
+{% block body %}
+{% include "Header/page_head.html.twig" with {'page_name':'WishList Products'} %}
+
+<div  class="main_content">
+    <div  class="section">
+        <div  class="container">
+            <div  class="row">
+                <div  class="col-12">
+                    <div  class="table-responsive wishlist_table">
+                        <table  class="table">
+                            <thead>
+                                <tr>
+                                    <th  class="product-thumbnail">&nbsp;</th>
+                                    <th  class="product-name">Product</th>
+                                    <th  class="product-price">Price</th>
+                                    <th  class="product-stock-status">Stock Status</th>
+                                    <th  class="product-add-to-cart"></th>
+                                    <th  class="product-remove">Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% if wishlist |length < 1 %}
+                                <tr><td colspan="6">Your WishList is Empty</td></tr>
+                            {% endif %}
+                            {% for product in wishlist %}
+                                <tr >
+                                <td  class="product-thumbnail">
+                                    <img width="50" height="50" alt="product1" src="/assets/images/products/{{product[1]}}"/>
+                                </td>
+                                <td  data-title="Product" class="product-name">
+                                    <a href="#">{{product[2]}}</a>
+                                </td>
+                                <td  data-title="Price" class="product-price">
+                                    {{product[3] | format_currency('USD') }}
+                                </td>
+                                <td  data-title="Stock Status" class="product-stock-status">
+                                    <span class="badge badge-pill badge-success">{{product[4]}}</span></td>
+                                <td  class="product-add-to-cart">
+                                    <a href="/cart/add/{{product[0]}}/1" class="action addCart btn btn-fill-out"><i class="icon-basket-loaded"></i> Add to Cart</a></td>
+                                <td  data-title="Remove" class="product-remove"><a href="/wishlist/remove/{{product[0]}}" class="action removeWish"><i class="ti-close"></i></a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+window.onload=()=>{
+
+    const links = document.querySelectorAll('.action');
+		links.forEach((link)=>{
+            const tr = link.closest('tr');
+			link.addEventListener('click',async function(e){
+				e.preventDefault();
+                const classe = link.classList[1]
+                const result = await fetchData(link.href);
+                if(result && classe=="addCart"){
+                    successMSG('Success','Product added to your cart');
+                    updateCartHeader(result);
+                }
+                if(result && classe=="removeWish"){
+                    successMSG('Success','Product removed From your WishList');
+                    tr.remove();
+                }
+            });
+        });
+}
+
+</script>
+
+{% endblock %}

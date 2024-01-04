@@ -1,0 +1,198 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{parent()}} | Your Cart
+{% endblock %}
+
+{% block body %}
+	<div class="main_content">
+		<div class="section">
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<div class="table-responsive shop_cart_table">
+							<table class="table">
+								<thead>
+									<tr>
+										<th class="product-thumbnail">&nbsp;</th>
+										<th class="product-name">Product</th>
+										<th class="product-price">Price</th>
+										<th class="product-quantity">Quantity</th>
+										<th class="product-subtotal">Total</th>
+										<th class="product-remove">Remove</th>
+									</tr>
+								</thead>
+									<tbody id="table-cart">
+									{% if cart.items|length < 1 %}
+										<tr> <td colspan="6">Your Cart Is Empty, Please Add Some Products</td></tr>
+									{% endif %}
+									{% for item in cart.items %}
+										<tr>
+											<td class="product-thumbnail">
+												<a><img width="50" alt="{{item.product.name}}" src="/assets/images/products/{{item.product.image}}"></a>
+											</td>
+											<td data-title="Product" class="product-name">
+												<a>{{item.product.name}}</a>
+											</td>
+											<td data-title="Price" class="product-price">{{(item.product.soldePrice / 100) | format_currency(app.session.get('settings').currency)}}</td>
+											<td data-title="Quantity" class="product-quantity">
+												<div class="quantity">
+													<a class="remove" href="/cart/remove/{{item.product.id}}/1">
+                                                    	<input type="button" value="-" class="minus">
+													</a>
+                                                    <input type="text" name="quantity" title="Qty" min="1" max="{{item.product.stock}}" value="{{item.qte}}" size="4" class="qty">
+                                                    <a class="add" href="/cart/add/{{item.product.id}}/1">
+														<input type="button" value="+" class="plus">
+													</a>
+                                                </div>
+											</td>
+											<td data-title="Total" class="product-subtotal">
+												{{item.Price | format_currency(app.session.get('settings').currency)}}
+											</td>
+											<td data-title="Remove" class="product-remove">
+												<a class="delete" href="/cart/delete/{{item.product.id}}">
+													<i class="ti-close"></i>
+												</a>
+											</td>
+										</tr>
+                                    {% endfor %}
+									</tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<div class="medium_divider"></div>
+						<div class="divider center_icon">
+							<i class="ti-shopping-cart-full"></i>
+						</div>
+						<div class="medium_divider"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6"></div>
+					<div class="col-md-6">
+						<div class="border p-3 p-md-4">
+							<div class="heading_s1 mb-3">
+								<h6>Cart Totals</h6>
+							</div>
+							<div class="table-responsive">
+								<table class="table">
+									<tbody>
+										<tr>
+											<td class="cart_total_label">Cart Subtotal</td>
+											<td class="cart_total_amount" id="sub_total">{{cart.Total | format_currency(app.session.get('settings').currency)}}</td>
+										</tr>
+										<tr>
+											<td class="cart_total_label">Shipping</td>
+											<td class="cart_total_amount" id="shipping">{{cart.Total > 100 ? 'Free Shipping' : '+$10 for Shipping'}}</td>
+										</tr>
+										<tr>
+											<td class="cart_total_label">Total</td>
+											<td class="cart_total_amount" >
+												<strong id="cart_total">{{(cart.Total > 100 ? cart.Total : cart.Total + 10) | format_currency(app.session.get('settings').currency)}}</strong>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<a routerlink="/checkout" class="btn btn-fill-out" ng-reflect-router-link="/checkout" href="/checkout">Proceed To CheckOut</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+
+	window.onload = ()=> {
+			const allLinks = document.querySelectorAll('#table-cart a');
+			var links = Array.from(allLinks).filter(function(lien) {
+    			return !lien.classList.contains('delete');
+			});
+
+			links.forEach((link)=>{
+				link.addEventListener('click',async function(e){
+					e.preventDefault();
+					//la ligne courrante : ***********
+					var tr = link.closest('tr');
+					//la classe pour verifier  l'action : delete /remove ou add.
+					var classe = link.classList.value;
+					//href c'est pour Request Url.
+        			var href= link.href;
+					// recuperer c'est elements pour modifier la quantité acheté et le total
+					var inputNumber = link.closest('.product-quantity').querySelector('input[type="text"]');
+					var price = parseFloat(tr.querySelector('.product-price').textContent.trim().replace(/[^\d.-]/g, ''));
+					var totalElement = tr.querySelector('.product-subtotal');
+					var total = 0;
+					//request : 
+					const result = await fetchData(href);
+					if(result){//response
+					   
+						if(classe == 'add'){
+							inputNumber.value = parseInt(inputNumber.value) + 1;
+							total = parseFloat(totalElement.textContent.trim().replace(/[^\d.-]/g, ''))+price;
+							updateTotal('add',price);
+						}
+						if(classe == 'remove'){
+							inputNumber.value = parseInt(inputNumber.value) - 1;
+							if(inputNumber.value == 0){
+								tr.remove();
+							}
+							total = parseFloat(totalElement.textContent.trim().replace(/[^\d.-]/g, ''))-price;
+							updateTotal('remove',price);
+						}
+						totalElement.textContent = format_currency(total);
+						updateCartHeader(result);
+					}else{
+						errorMSG('Error','Please Try Again');
+					}
+				});
+			})
+			deleteFromCart();
+	};
+
+	const deleteFromCart=()=>{
+		const links = document.querySelectorAll('#table-cart .delete');
+			links.forEach((link)=>{
+				link.addEventListener('click',async function(e){
+					e.preventDefault();
+					//la ligne courrante : ***********
+					var tr = link.closest('tr');
+					var total = parseFloat(tr.querySelector('.product-subtotal').textContent.trim().replace(/[^\d.-]/g, ''));
+					const result = await fetchData(link.href);
+					if(result){
+						tr.remove();
+						updateTotal('delete',total);
+						successMSG('Success','Product Removed From cart');
+						updateCartHeader(result);
+					}
+					else{
+						errorMSG('Error','Please Try Again');
+					}
+				});
+			});
+	}
+
+	const updateTotal=(action, total)=>{
+		const subTotal = document.querySelector('#sub_total');
+		const shipping = document.querySelector('#shipping');
+		const cartTotal = document.querySelector('#cart_total');
+		let x = parseFloat(subTotal.textContent.trim().replace(/[^\d.-]/g, ''));
+		if(action == 'add'){
+			x += total;
+		}
+		if(action == 'remove' || action=='delete'){
+			x -= total;			
+		}
+		subTotal.textContent = format_currency(x);
+		shipping.textContent = (x > 100 ? 'Free shipping' : '+ $10 For Shipping');
+		cartTotal.textContent = format_currency((x > 100 ? x : (x + 10)));
+	}
+
+</script>
+{% endblock %}

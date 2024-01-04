@@ -1,0 +1,401 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{parent()}}
+	| My Account
+{% endblock %}
+
+{% block body %}
+
+	{% include "Header/page_head.html.twig" with {'page_name':'My Account'} %}
+	<!-- START MAIN CONTENT -->
+	<div
+		class="main_content">
+
+		<!-- START SECTION SHOP -->
+		<div class="section">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-3 col-md-4">
+						<div class="dashboard_menu">
+							<ul class="nav nav-tabs flex-column" role="tablist">
+								<li class="nav-item">
+									<a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="false">
+										<i class="ti-layout-grid2"></i>Dashboard</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false">
+										<i class="ti-shopping-cart-full"></i>Orders</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true">
+										<i class="ti-location-pin"></i>My Address</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true">
+										<i class="ti-id-badge"></i>Account details</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" id="logout-tab" href="/logout" data-bs-toggle="tab" role="tab" aria-controls="logout" aria-selected="true">
+										<i class="ti-lock"></i>Logout</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-9 col-md-8">
+						<div class="tab-content dashboard_content">
+							<div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+								<div class="card">
+									<div class="card-header">
+										<h3>Dashboard</h3>
+									</div>
+									<div class="card-body">
+										<p>From your account dashboard. you can easily check &amp; view your
+											<a href="javascript:void(0);" onclick="$('#orders-tab').trigger('click')">recent orders</a>, manage your
+											<a href="javascript:void(0);" onclick="$('#address-tab').trigger('click')">shipping and billing addresses</a>
+											and
+											<a href="javascript:void(0);" onclick="$('#account-detail-tab').trigger('click')">edit your password and account details.</a>
+										</p>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="logout" role="tabpanel" aria-labelledby="logout-tab">
+								<div class="card">
+									<div class="card-header">
+										<h3>Logout</h3>
+									</div>
+									<div class="card-body">
+										<p>From your account dashboard. you can easily check &amp; view your
+											<a href="javascript:void(0);" onclick="$('#orders-tab').trigger('click')">recent orders</a>, manage your
+											<a href="javascript:void(0);" onclick="$('#address-tab').trigger('click')">shipping and billing addresses</a>
+											and
+											<a href="javascript:void(0);" onclick="$('#account-detail-tab').trigger('click')">edit your password and account details.</a>
+										</p>
+										<button type="submit" class="btn btn-fill-out py-2" name="submit" value="Submit">Logout</button>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+								<div class="card">
+									<div class="card-header">
+										<h3>Orders</h3>
+									</div>
+									<div class="card-body">
+										<div class="table-responsive">
+											<table class="table">
+												<thead>
+													<tr>
+														<th>Order</th>
+														<th>Date</th>
+														<th>Status</th>
+														<th>Total</th>
+														<th>Actions</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>#1234</td>
+														<td>March 15, 2020</td>
+														<td>Processing</td>
+														<td>$78.00 for 1 item</td>
+														<td>
+															<a href="#" class="btn btn-fill-out btn-sm">View</a>
+														</td>
+													</tr>
+													<tr>
+														<td>#2366</td>
+														<td>June 20, 2020</td>
+														<td>Completed</td>
+														<td>$81.00 for 1 item</td>
+														<td>
+															<a href="#" class="btn btn-fill-out btn-sm">View</a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+								<div class="row rw-address">
+									<div class="action mt-2">
+										<button type="button" class="btn btn-sm btn-dark" id="btn-modal">Add New</button>
+									</div>
+									{% for addr in adresses %}
+										<div class=" col-sm-12 cardd">
+											<div class="card mb-3 mb-lg-0">
+												<div class="card-header">
+													<h3>{{addr.type}}</h3>
+												</div>
+												<div class="card-body">
+													<address>
+														#{{addr.name}}<br>#{{addr.city}}<br>#{{addr.zipCode}}<br>
+													</address>
+													<p>{{addr.state}}</p>
+													<div class="d-flex justify-content-between">
+														<a href="/address/edit/{{addr.id}}"
+															data-id = "{{addr.id}}"
+															data-name="{{addr.name}}"
+															data-type="{{addr.type}}"
+															data-state="{{addr.state}}"
+															data-city="{{addr.city}}"
+															data-zipCode="{{addr.zipCode}}"
+															class="action action-edit text-dark"><i class="fas fa-edit"></i>&nbsp;Edit
+														</a>
+														<a href="/api/address/delete/{{addr.id}}" class="action action-delete text-danger"><i class="fas fa-trash-alt"></i>&nbsp;delete</a>
+													</div>
+												</div>
+											</div>
+										</div>
+									{% endfor %}
+								</div>
+								<!-- The Modal -->
+									<div class="modal" id="myModal">
+										<div class="modal-dialog">
+											<div
+												class="modal-content">
+
+												<!-- Modal Header -->
+												<div class="modal-header">
+													<h4 class="modal-title">Add New Address</h4>
+													<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+												</div>
+
+												<!-- Modal body -->
+												<div class="modal-body">
+													<form id="add_address" method="post">
+														<div>
+															<select class="form-select" id="type" name="type" required>
+																<option value="">Select the Type Address</option>
+																<option value="Billing Address">Billing Address</option>
+																<option value="Shipping Address">Shipping Address</option>
+																<option value="my Home">Home Address</option>
+																<option value="other">other</option>
+															</select>
+														</div>
+														<div class="mt-3">
+															<label for="street" class="form-label">Street :
+															</label>
+															<input type="text" class="form-control" id="street" placeholder="Enter your street" name="name" required>
+														</div>
+														
+														<div class="mt-3">
+															<label for="city" class="form-label">City :
+															</label>
+															<input type="text" class="form-control" id="city" placeholder="Enter your City" name="city" required>
+														</div>
+														<div class="mt-3">
+															<label for="zip_code" class="form-label">Zip Code :
+															</label>
+															<input type="text" class="form-control" id="zip_code" placeholder="Enter the Zip Code" name="zip_code" required>
+														</div>
+														<div class="mt-3">
+															<label for="state" class="form-label">State :
+															</label>
+															<select class="form-select" id="state" name="state" required>
+																<option value="">Select your State</option>
+															</select>
+														</div>
+														<button type="submit" class="btn btn-danger mt-3">Submit</button>
+													</form>
+												</div>
+
+											</div>
+										</div>
+									</div>
+							</div>
+							<div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
+								<div class="card">
+									<div class="card-header">
+										<h3>Account Details</h3>
+									</div>
+									<div class="card-body">
+										<p>Already have an account?
+											<a href="#">Log in instead!</a>
+										</p>
+										<form method="post" name="enq">
+											<div class="row">
+												<div class="form-group col-md-6 mb-3">
+													<label>First Name
+														<span class="required">*</span>
+													</label>
+													<input required="" class="form-control" name="name" type="text">
+												</div>
+												<div class="form-group col-md-6 mb-3">
+													<label>Last Name
+														<span class="required">*</span>
+													</label>
+													<input required="" class="form-control" name="phone">
+												</div>
+												<div class="form-group col-md-12 mb-3">
+													<label>Display Name
+														<span class="required">*</span>
+													</label>
+													<input required="" class="form-control" name="dname" type="text">
+												</div>
+												<div class="form-group col-md-12 mb-3">
+													<label>Email Address
+														<span class="required">*</span>
+													</label>
+													<input required="" class="form-control" name="email" type="email">
+												</div>
+												<div class="form-group col-md-12 mb-3">
+													<label>Current Password
+														<span class="required">*</span>
+													</label>
+													<input required="" class="form-control" name="password" type="password">
+												</div>
+												<div class="form-group col-md-12 mb-3">
+													<label>New Password
+														<span class="required">*</span>
+													</label>
+													<input required="" class="form-control" name="npassword" type="password">
+												</div>
+												<div class="form-group col-md-12 mb-3">
+													<label>Confirm Password
+														<span class="required">*</span>
+													</label>
+													<input required="" class="form-control" name="cpassword" type="password">
+												</div>
+												<div class="col-md-12">
+													<button type="submit" class="btn btn-fill-out" name="submit" value="Submit">Save</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- END SECTION SHOP -->
+
+
+	</div>
+	<!-- END MAIN CONTENT -->
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		window.onload = ()=>{
+			initState();
+			var address = {};
+			
+			//edit & delete : *********************************
+			links = document.querySelectorAll('.action');
+			links.forEach((link)=>{
+				link.addEventListener('click',async (e)=>{
+					e.preventDefault();
+					card = link.closest('.cardd');
+					if(link.classList.contains('action-delete')){
+						const response = await fetch(link.href,{
+							method:'DELETE',
+						});
+						result = await response.json();
+						if(result.success){
+							successMSG('Success',result.msg)
+							card.remove();
+							return;
+						}
+						errorMSG('Error',result.msg);
+					}
+					else if(link.classList.contains('action-edit')){
+						address = Object.assign({},e.target.dataset);
+						console.log(address);
+						document.querySelector("#type").value = address.type
+						document.querySelector("#street").value = address.name
+						document.querySelector("#city").value = address.city
+						document.querySelector("#state").value = address.state
+						document.querySelector("#zip_code").value = address.zipcode
+						document.querySelector(".modal-title").innerHTML = "Update Address";
+						$('#myModal').modal('show');
+					}
+				})
+			});
+			
+			//form address : **********************************
+			form = document.querySelector('#add_address');
+			form.addEventListener('submit',async (e)=>{
+				e.preventDefault();
+				if(document.querySelector(".modal-title").innerText == "Add New Address"){
+					var response = await fetch('/api/address/add',{
+						method:'POST',
+						body: new FormData(form)
+					});
+					result = await response.json();
+					displayAddress(result);
+				}else{
+					var obj = {};
+					new FormData(form).forEach((value, key)=> obj[key] = value);
+					var response = await fetch('/api/address/edit/'+address.id,{
+						method:'PUT',
+						body: JSON.stringify(obj)
+					});
+					/*
+					* to do : update Html card address
+					*/
+				}
+				form.reset();
+				$('#myModal').modal('hide');
+			})
+
+			document.querySelector("#btn-modal").addEventListener('click', ()=>{
+				initModal();
+				$('#myModal').modal('show');
+			})
+		}	
+
+		const displayAddress =(data)=>{
+			document.querySelector(".rw-address").innerHTML += `
+										<div class=" col-sm-12 cardd">
+											<div class="card mb-3 mb-lg-0">
+												<div class="card-header">
+													<h3>${data[1]}</h3>
+												</div>
+												<div class="card-body">
+													<address>
+														#${data[2]}<br>#${data[3]}<br>#${data[5]}<br>
+													</address>
+													<p>${data[4]}</p>
+													<div class="d-flex justify-content-between">
+														<a href="/api/address/edit/${data[0]}" 
+															data-id = "${data[0]}"
+															data-name="${data[2]}"
+															data-type="${data[1]}"
+															data-state="${data[4]}"
+															data-city="${data[3]}"
+															data-zipCode="${data[5]}"
+															class="action action-edit text-dark"><i class="fas fa-edit"></i>&nbsp;Edit
+														</a>
+														<a href="/api/address/delete/${data[0]}" class="action action-delete text-danger"><i class="fas fa-trash-alt"></i>&nbsp;delete</a>
+													</div>
+												</div>
+											</div>
+										</div>`;
+		}
+
+		const initState = async ()=>{
+			const response = await fetch('/assets/data/countries.json');
+			states = await response.json();
+			select = document.querySelector('#state');
+			states.forEach((state)=>{
+				select.innerHTML += `<option value="${state.alpha2Code}">${state.name}</option>`;
+			})
+		}
+
+		const initModal=()=>{
+			/*document.querySelector("#type").value = ""
+			document.querySelector("#street").value = ""
+			document.querySelector("#city").value = ""
+			document.querySelector("#state").value = ""
+			document.querySelector("#zip_code").value = ""*/
+			document.querySelector('#add_address').reset();
+			document.querySelector(".modal-title").innerHTML = "Add New Address";
+		}
+
+	</script>
+{% endblock %}
+
