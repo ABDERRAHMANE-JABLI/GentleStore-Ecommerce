@@ -4,6 +4,7 @@ namespace App\Security;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -21,9 +22,10 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
     use TargetPathTrait;
 
     public const LOGIN_ROUTE = 'app_login';
-
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    private $session;
+    public function __construct(private UrlGeneratorInterface $urlGenerator, private RequestStack $RequestStack)
     {
+        $this->session = $RequestStack->getSession();
     }
 
     public function authenticate(Request $request): Passport
@@ -47,9 +49,14 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
-
+        
+        $path = $this->session->get('next');
+        if(!$path){
+            return new RedirectResponse($this->urlGenerator->generate('app_account'));
+        }
+        return new RedirectResponse($this->urlGenerator->generate($path));
         // For example:
-        return new RedirectResponse($this->urlGenerator->generate('app_account'));
+        
        // throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
