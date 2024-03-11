@@ -50,28 +50,28 @@
 						<div class="medium_divider"></div>
 					</div>
 				</div>
-				<div class="row">
                     
 					{% if app.user %}
-                        <div class="col-md-6">
-						{% for addr in adresses %}
-							<div class="col-9 cardd mb-3">
-								<div class="card">
-									<div class="card-header bg-danger">
-										<h3 class="text-white">{{addr.type}}</h3>
-									</div>
-									<div class="card-body">
-										<address>
-											#{{addr.name}}<br>#{{addr.city}}<br>#{{addr.zipCode}}<br>
-										</address>
-										<p>{{addr.state}}</p>
-									</div>
-								</div>
+                        <div class="container row">
+							<div class="col">
+								<select class="form-select" id="shipping_adresse">
+									<option value="" selected>Shipping Adresse</option>
+									{% for addr in adresses %}
+										<option value="{{addr.id}}">#State:{{addr.state}} #{{addr.name}}  #{{addr.city ~ ' ' ~ addr.zipCode}}</option>
+									{% endfor %}
+								</select>
 							</div>
-						{% endfor %}
+							<div class="col">
+								<select class="form-select" id="billing_adresse">
+									<option value="" selected>Billing Adresse</option>
+									{% for addr in adresses %}
+										<option value="{{addr.id}}">#State:{{addr.state}} #{{addr.name}}  #{{addr.city ~ ' ' ~ addr.zipCode}}</option>
+									{% endfor %}
+								</select>
+							</div>
                         </div>
 					{% else %}
-						<div class="col-md-6">
+						<div class="container">
 							<div class="heading_s1">
 								<h4>Billing Details</h4>
 							</div>
@@ -1125,7 +1125,7 @@
 							</form>
 						</div>
 					{% endif %}
-					<div class="col-md-6">
+					<div class="container mt-3">
 						<div class="order_review">
 							<div class="heading_s1">
 								<h4>Your Orders</h4>
@@ -1205,7 +1205,6 @@
 							<a href="#" class="btn btn-fill-out btn-block">Pay now</a>
 						</div>
 					</div>
-				</div>
 			</div>
 		</div>
 	</div>

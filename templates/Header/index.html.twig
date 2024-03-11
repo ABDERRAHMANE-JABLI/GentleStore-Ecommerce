@@ -182,7 +182,7 @@
 					<li class="dropdown cart_dropdown">
 						<a href="#" data-bs-toggle="dropdown" class="nav-link cart_trigger">
 							<i class="linearicons-cart"></i>
-							<span class="cart_count" id="length_cart">{{cart.length }}</span>
+							<span class="cart_count" id="length_cart">{{cart.length ? cart.length : 0 }}</span>
 						</a>
 						<div class="cart_box dropdown-menu dropdown-menu-right">
 							<ul class="cart_list" id="cart_Header">
