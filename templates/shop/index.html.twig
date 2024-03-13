@@ -162,3 +162,33 @@
         </div>
     </div>
 {% endblock %}
+{% block javascripts %}
+<script>
+
+	window.onload = ()=> {
+			const links = document.querySelectorAll('.action');
+			//console.log(links);return;
+			links.forEach((link)=>{
+				link.addEventListener('click',async function(e){
+					e.preventDefault();
+                    //la classe pour verifier  l'action : cart ou compare.
+					var classe = link.classList[1];
+					//href c'est pour Request Url.
+					const result = await fetchData(link.href);
+					if(result==0) {toastr.error('Already Exist'); return;}
+					if(classe == 'action_compare' && result){
+						toastr.info('Product Added To The Compare List');
+					}
+					if(classe=='action_cart' && result){
+						successMSG('Success','Product Added To Your Cart');
+						updateCartHeader(result);
+					}
+					if(classe=='action_like' && result){
+						infoMSG('Product Added To The WishList');
+					}
+				});
+			})
+	};
+
+</script>
+{% endblock %}
