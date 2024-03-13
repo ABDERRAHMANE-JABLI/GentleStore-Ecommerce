@@ -4,6 +4,27 @@
 {% endblock %}
 
 {% block body %}
+	<header class="header_wrap fixed-top header_with_topbar active">
+        <div class="bottom_header dark_skin main_menu_uppercase">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg mt-2"><a routerlink="/" class="navbar-brand" ng-reflect-router-link="/"
+                        href="/">
+                        <h2>GentleStore</h2>
+                    </a><button type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-expanded="false" class="navbar-toggler collapsed"><span
+                            class="ion-android-menu"></span></button>
+                    <div id="navbarSupportedContent" class="navbar-collapse justify-content-end collapse" style="">
+                        <ul class="navbar-nav">
+                            <li>
+                                <a class="nav-link nav_item" href="/">Return</a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                </nav>
+            </div>
+        </div>
+    </header>
 	<div class="main_content">
 		<div class="section">
 			<div class="container">
@@ -1171,21 +1192,14 @@
 									<h4>Payment</h4>
 								</div>
 								<div class="payment_option">
-									<div class="custome-radio"><input required="" type="radio" name="payment_option" checked="" class="form-check-input" id="directBankTransfer" value="directBankTransfer"><label class="form-check-label" for="directBankTransfer">Direct Bank
-										                                        Transfer</label>
+									<div class="custome-radio"><input required="" type="radio" name="payment_option" checked="" class="form-check-input" id="Stripe" value="Stripe"><label class="form-check-label" for="Stripe">Stripe</label>
 										<p class="payment-text">
 											There are many variations of
 											                                        passages of Lorem Ipsum available, but the majority have suffered
 											                                        alteration.
 										</p>
 									</div>
-									<div class="custome-radio"><input required="" type="radio" name="payment_option" checked="" class="form-check-input" id="checkPayment" value="checkPayment"><label class="form-check-label" for="checkPayment">Check
-										                                        Payment</label>
-										<p class="payment-text">
-											Please send your cheque to
-											                                        Store Name, Store Street, Store Town, Store State / County, Store Postcode.
-										</p>
-									</div>
+									
 									<div class="custome-radio"><input required="" type="radio" name="payment_option" checked="" class="form-check-input" id="paypal" value="paypal"><label class="form-check-label" for="paypal">Paypal</label>
 										<p class="payment-text">
 											Pay via PayPal; you can pay
