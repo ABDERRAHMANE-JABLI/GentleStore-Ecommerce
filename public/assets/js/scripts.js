@@ -315,9 +315,9 @@
 	/*===================================*
 	08. PARALLAX JS
 	*===================================*/
-	$(window).on('load', function() {
+	/*$(window).on('load', function() {
         $('.parallax_bg').parallaxBackground();
-	});
+	});*/
 	
 	/*===================================*
 	09. MASONRY JS

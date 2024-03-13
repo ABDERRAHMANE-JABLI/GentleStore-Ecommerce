@@ -1216,10 +1216,30 @@
 
 								</div>
 							</div>
-							<a href="#" class="btn btn-fill-out btn-block">Pay now</a>
+							<button id="payNow" class="btn btn-fill-out btn-block">Pay now</button>
 						</div>
 					</div>
 			</div>
 		</div>
 	</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="/assets/js/cart.js"></script>
+<script>
+
+window.onload = ()=> {
+	
+	document.querySelector("#payNow").addEventListener('click', ()=>{
+		var shipping_adresse = document.querySelector('#shipping_adresse').value; 
+		var billing_adresse = document.querySelector('#billing_adresse').value;
+		if(shipping_adresse =="" || billing_adresse ==""){
+			errorMSG('error','You should select your shipping adress and billing adress');
+			return;
+			console.log('rrrrrrrr');
+		}
+	})
+}
+
+</script>
 {% endblock %}
