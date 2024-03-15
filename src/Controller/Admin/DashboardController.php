@@ -8,6 +8,7 @@ use App\Entity\Collections;
 use App\Entity\OrderDetails;
 use App\Entity\Orders;
 use App\Entity\Pages;
+use App\Entity\Payement;
 use App\Entity\Product;
 use App\Entity\Settings;
 use App\Entity\Sliders;
@@ -60,6 +61,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Category', 'fas fa-tag', Category::class);
         yield MenuItem::linkToCrud('Orders', 'fas fa-box-open', Orders::class);
         yield MenuItem::linkToCrud('Detail Order', 'fas fa-sitemap', OrderDetails::class);
+        yield MenuItem::linkToCrud('Payement', 'fas fa-credit-card', Payement::class);
         yield MenuItem::linkToCrud('Address', 'fas fa-location', Adresse::class);
         yield MenuItem::linkToCrud('Sliders', 'fas fa-image', Sliders::class);
         yield MenuItem::linkToCrud('Settings', 'fas fa-gear', Settings::class);

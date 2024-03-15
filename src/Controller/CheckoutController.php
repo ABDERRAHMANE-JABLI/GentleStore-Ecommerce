@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\services\CartService;
 use App\Repository\AdresseRepository;
+use App\services\StripeService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -13,7 +14,7 @@ class CheckoutController extends AbstractController
 {
     private $session;
 
-    public function __construct(private CartService $serviceCart, private RequestStack $requestStack)
+    public function __construct(private CartService $serviceCart, private RequestStack $requestStack, private StripeService $stripe)
     {
         $this->serviceCart = $serviceCart;//  
         $this->session = $requestStack->getSession();          
@@ -33,10 +34,12 @@ class CheckoutController extends AbstractController
         if(!count($cart['items'])){
             return $this->redirectToRoute('app_home');
         }
+
         $adresses = $adresseRepository->findByClient($this->getUser());
         return $this->render('checkout/index.html.twig', [
             'cart'=>$cart,
             'adresses' => $adresses,
+            'publicKey'=> $this->stripe->getPublicKey(),
             'controller_name' => 'CheckoutController',
         ]);
     }

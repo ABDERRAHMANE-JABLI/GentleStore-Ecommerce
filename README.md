@@ -17,6 +17,10 @@
 ## Lancer l’application en arriere plan:
 `symfony server:start -d`
 
+## Utils : 
+### Test payment methods : 
+https://docs.stripe.com/testing
+
 
 
 
