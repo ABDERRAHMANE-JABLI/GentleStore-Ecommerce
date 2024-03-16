@@ -27,16 +27,24 @@ class Orders
     private ?\DateTimeInterface $date_order = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $status = null;
-
+    private ?string $status = null;/*'Incomplete' / 'Processing' / 'Ready for Shipment' / 'Shipped',*/
+    
     #[ORM\OneToMany(mappedBy: 'the_order', targetEntity: OrderDetails::class)]
     private Collection $orderDetails;
 
     #[ORM\Column]
     private ?bool $isPayed = null;
 
+    #[ORM\ManyToOne]
+    private ?Adresse $shipping_addr = null;
+
+    #[ORM\ManyToOne]
+    private ?Adresse $billing_addr = null;
+
     public function __construct()
     {
+        $this->status = "Incomplete";
+        $this->isPayed = false;
         $this->setDateOrder(new \DateTimeImmutable());
     }
 
@@ -77,7 +85,6 @@ class Orders
     public function setDateOrder(\DateTimeInterface $date_order): static
     {
         $this->date_order = $date_order;
-
         return $this;
     }
 
@@ -89,7 +96,6 @@ class Orders
     public function setStatus(string $status): static
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -107,7 +113,6 @@ class Orders
             $this->orderDetails->add($orderDetail);
             $orderDetail->setTheOrder($this);
         }
-
         return $this;
     }
 
@@ -119,7 +124,6 @@ class Orders
                 $orderDetail->setTheOrder(null);
             }
         }
-
         return $this;
     }
 
@@ -131,12 +135,35 @@ class Orders
     public function setIsPayed(bool $isPayed): static
     {
         $this->isPayed = $isPayed;
-
         return $this;
     }
 
     public function __toString()
     {
         return '#'.$this->getId().' '.$this->getClient()->getFullName();
+    }
+
+    public function getShippingAddr(): ?Adresse
+    {
+        return $this->shipping_addr;
+    }
+
+    public function setShippingAddr(?Adresse $shipping_addr): static
+    {
+        $this->shipping_addr = $shipping_addr;
+
+        return $this;
+    }
+
+    public function getBillingAddr(): ?Adresse
+    {
+        return $this->billing_addr;
+    }
+
+    public function setBillingAddr(?Adresse $billing_addr): static
+    {
+        $this->billing_addr = $billing_addr;
+
+        return $this;
     }
 }

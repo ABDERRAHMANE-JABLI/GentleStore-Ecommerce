@@ -108,4 +108,10 @@ class Adresse
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->getState().' #'.$this->getName().' #'.$this->getCity().' #'.$this->getZipCode();
+    }
+
 }

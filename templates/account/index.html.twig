@@ -9,8 +9,7 @@
 
 	{% include "Header/page_head.html.twig" with {'page_name':'My Account'} %}
 	<!-- START MAIN CONTENT -->
-	<div
-		class="main_content">
+	<div class="main_content">
 
 		<!-- START SECTION SHOP -->
 		<div class="section">
@@ -85,32 +84,23 @@
 											<table class="table">
 												<thead>
 													<tr>
-														<th>Order</th>
-														<th>Date</th>
+														<th>Order Date</th>
 														<th>Status</th>
 														<th>Total</th>
 														<th>Actions</th>
 													</tr>
 												</thead>
 												<tbody>
+												{% for item in orders %}
 													<tr>
-														<td>#1234</td>
-														<td>March 15, 2020</td>
-														<td>Processing</td>
-														<td>$78.00 for 1 item</td>
+														<td>{{item.dateOrder|date('Y-m-d')}}</td>
+														<td>{{item.status|title}}</td>
+														<td>{{item.Total | format_currency('USD')}}</td>
 														<td>
-															<a href="#" class="btn btn-fill-out btn-sm">View</a>
+															<a href="/order/details/{{item.id}}" class="btn btn-fill-out btn-sm">View Details</a>{# TO DO : afficher une modal contenant le detail de la commande #}
 														</td>
 													</tr>
-													<tr>
-														<td>#2366</td>
-														<td>June 20, 2020</td>
-														<td>Completed</td>
-														<td>$81.00 for 1 item</td>
-														<td>
-															<a href="#" class="btn btn-fill-out btn-sm">View</a>
-														</td>
-													</tr>
+												{% endfor %}
 												</tbody>
 											</table>
 										</div>
@@ -273,7 +263,7 @@
 		</div>
 		<!-- END SECTION SHOP -->
 
-
+</div>
 	</div>
 	<!-- END MAIN CONTENT -->
 {% endblock %}

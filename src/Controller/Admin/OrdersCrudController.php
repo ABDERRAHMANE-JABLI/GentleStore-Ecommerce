@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class OrdersCrudController extends AbstractCrudController
 {
@@ -23,14 +24,16 @@ class OrdersCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             ChoiceField::new('status')->setChoices([
+                'Incomplete'=>'Incomplete',
                 'Processing'=>'Processing',
                 'Ready for Shipment'=>'Ready for Shipment',
                 'Shipped'=>'Shipped',
-                'On the Way'=>'On the Way'
             ]),
             AssociationField::new('client'),
             MoneyField::new('Total')->setCurrency('USD'),
             BooleanField::new('isPayed'),
+            TextField::new('ShippingAddr'),
+            TextField::new('BillingAddr')
         ];
     }
     

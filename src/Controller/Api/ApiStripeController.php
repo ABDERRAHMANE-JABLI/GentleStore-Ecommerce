@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use App\services\CartService;
 use App\services\StripeService;
 use Stripe\StripeClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,12 +12,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ApiStripeController extends AbstractController
 {
-    public function calculateOrderAmount($items):int{
-        return 500;
+    public function calculateOrderAmount($items):int{//TO DO
+        return $items*100;
     }
 
     #[Route('/api/strip/paymentIntent', name: 'app_api_stripe', methods:['POST'])]
-    public function index(StripeService $stripSrc, Request $req):Response
+    public function index(StripeService $stripSrc, Request $req, CartService $cartService):Response
     {
         try {
             $privateKey = $stripSrc->getPrivateKey();
@@ -24,11 +25,12 @@ class ApiStripeController extends AbstractController
             // retrieve JSON from POST body
             //$amount = $req->getPayload()->get('amount');
             $items = null;
-
+            $cart = $cartService->getDetails();
+            $total = $cart['Total'] > 100 ?  $cart['Total'] :  $cart['Total'] + 10;
             // Create a PaymentIntent with amount and currency
             $paymentIntent = $stripe->paymentIntents->create([
-                'amount' => $this->calculateOrderAmount($items),
-                'currency' => 'eur',
+                'amount' => $this->calculateOrderAmount($total),
+                'currency' => 'usd',
                 // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
                 'automatic_payment_methods' => [
                     'enabled' => true,
