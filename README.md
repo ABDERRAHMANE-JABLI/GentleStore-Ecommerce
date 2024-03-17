@@ -21,6 +21,7 @@
 ### Test payment methods : 
 https://docs.stripe.com/testing
 
-
+### Nelmio Cors Bundle :
+https://symfony.com/bundles/NelmioCorsBundle/current/index.html
 
 

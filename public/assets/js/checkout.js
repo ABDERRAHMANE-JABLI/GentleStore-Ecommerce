@@ -9,7 +9,7 @@ window.onload = () => {
 			errorMSG('error', 'You should select your shipping adress and billing adress');
 			return;
 		}
-        const result = await postData('http://127.0.0.1:8000/api/orders',{shipping_addr : shipping_adresse, billing_addr : billing_adresse});
+        const result = await postData('/api/orders',{shipping_addr : shipping_adresse, billing_addr : billing_adresse});
         console.log(result);
         if(result.success){
             console.log(result.data);
